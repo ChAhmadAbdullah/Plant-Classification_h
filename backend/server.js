@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth.routes.js');
 const chatRoutes = require('./routes/chat.routes.js');
 const uploadRoutes = require('./routes/upload.routes.js');
+const mlRoutes = require('./routes/ml.routes.js');
 const { errorHandler } = require('./middleware/errorHandler.js');
 const { getClientStatus } = require('./services/aiService.js');
 
@@ -125,6 +126,7 @@ app.get('/api/debug/ai-status', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/ml', mlRoutes);
 
 // 404 handler
 app.use((req, res) => {

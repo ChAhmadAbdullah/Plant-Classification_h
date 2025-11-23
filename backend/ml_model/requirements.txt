@@ -1,0 +1,13 @@
+# Core ML Dependencies
+torch==2.7.0
+torchvision==0.22.0
+Pillow==11.2.1
+
+# Optional: FastAPI standalone service (if needed)
+fastapi==0.121.3
+uvicorn==0.38.0
+python-multipart==0.0.20
+
+# Groq AI Integration (from original main.py)
+groq==0.36.0
+python-dotenv==1.2.1

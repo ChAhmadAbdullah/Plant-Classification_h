@@ -13,6 +13,7 @@ import History from "./pages/History";
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import DiseasePrediction from "./pages/DiseasePrediction";
 
 function App() {
   return (
@@ -27,6 +28,14 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route 
+                  path="/predict" 
+                  element={
+                    <ProtectedRoute>
+                      <DiseasePrediction />
+                    </ProtectedRoute>
+                  } 
+                />
                 <Route 
                   path="/chat" 
                   element={

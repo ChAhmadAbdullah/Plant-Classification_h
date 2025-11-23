@@ -37,7 +37,94 @@ export class ImageService {
     }
   }
 
-  // New method for image prediction
+  // New method for ML model prediction (integrated backend)
+  static async predictDisease(file, threshold = 0.60) {
+    // Validate file
+    const validation = validateFile(file);
+    if (!validation.isValid) {
+      throw new Error(validation.error);
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('threshold', threshold);
+
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/ml/predict', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Prediction failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      return {
+        success: true,
+        prediction: data.data.prediction,
+        raw: data.data.raw,
+        fileInfo: {
+          name: file.name,
+          size: formatFileSize(file.size),
+          type: file.type,
+          timestamp: new Date().toISOString()
+        }
+      };
+    } catch (error) {
+      console.error('Disease prediction error:', error);
+      throw new Error(error.message || 'Failed to get disease prediction');
+    }
+  }
+
+  // Quick prediction without authentication (for testing)
+  static async quickPredict(file, threshold = 0.60) {
+    // Validate file
+    const validation = validateFile(file);
+    if (!validation.isValid) {
+      throw new Error(validation.error);
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('threshold', threshold);
+
+      const response = await fetch('http://localhost:5000/api/ml/predict/quick', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Prediction failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      return {
+        success: true,
+        prediction: data.data,
+        fileInfo: {
+          name: file.name,
+          size: formatFileSize(file.size),
+          type: file.type,
+          timestamp: new Date().toISOString()
+        }
+      };
+    } catch (error) {
+      console.error('Quick prediction error:', error);
+      throw new Error(error.message || 'Failed to get quick prediction');
+    }
+  }
+
+  // Legacy method for image prediction (original FastAPI service)
   static async predictImage(file) {
     // Validate file
     const validation = validateFile(file);
